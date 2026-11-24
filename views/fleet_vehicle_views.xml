@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_view_form_elmi" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.elmi</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_elmi_open_meter_readings" type="object" class="oe_stat_button" icon="fa-tachometer">
+                    <field name="elmi_meter_reading_count" widget="statinfo" string="Meters"/>
+                </button>
+                <button name="action_elmi_open_maintenance_cost" type="object" class="oe_stat_button" icon="fa-money">
+                    <field name="elmi_maintenance_cost_total" widget="statinfo" string="Maint. Cost"/>
+                </button>
+                <button name="action_elmi_open_cannibalization" type="object" class="oe_stat_button" icon="fa-exchange">
+                    <field name="elmi_cannibalization_count" widget="statinfo" string="Cannibalization"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='category_id']/parent::group" position="inside">
+                <field name="elmi_fleet_class"/>
+                <field name="elmi_asset_status" widget="badge"/>
+                <field name="elmi_primary_meter_type"/>
+                <field name="elmi_current_meter"/>
+                <field name="elmi_last_meter_date"/>
+                <field name="elmi_stock_location_id"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Equipment" name="elmi_equipment">
+                    <field name="elmi_equipment_ids">
+                        <list>
+                            <field name="name"/>
+                            <field name="elmi_is_tool"/>
+                            <field name="serial_no"/>
+                            <field name="elmi_current_holder_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_search_elmi" model="ir.ui.view">
+        <field name="name">fleet.vehicle.search.elmi</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator/>
+                <filter string="Under Maintenance" name="elmi_under_maintenance" domain="[('elmi_asset_status', '=', 'under_maintenance')]"/>
+                <filter string="Assigned" name="elmi_assigned" domain="[('elmi_asset_status', '=', 'assigned')]"/>
+                <filter string="Standby" name="elmi_standby" domain="[('elmi_asset_status', '=', 'standby')]"/>
+                <filter string="Heavy Fleet" name="elmi_heavy" domain="[('elmi_fleet_class', '=', 'heavy')]"/>
+                <filter string="Light Fleet" name="elmi_light" domain="[('elmi_fleet_class', '=', 'light')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Asset Status" name="groupby_elmi_asset_status" context="{'group_by': 'elmi_asset_status'}"/>
+                <filter string="Fleet Class" name="groupby_elmi_fleet_class" context="{'group_by': 'elmi_fleet_class'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_kanban_elmi" model="ir.ui.view">
+        <field name="name">fleet.vehicle.kanban.elmi</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='card']" position="attributes">
+                <attribute name="t-attf-class">flex-row #{record.elmi_asset_status.raw_value == 'under_maintenance' and 'border border-danger' or (record.elmi_asset_status.raw_value == 'assigned' and 'border border-warning' or 'border border-success')}</attribute>
+            </xpath>
+            <xpath expr="//t[@t-name='card']/main/div[1]" position="after">
+                <field name="elmi_asset_status" widget="badge"
+                    decoration-danger="elmi_asset_status == 'under_maintenance'"
+                    decoration-warning="elmi_asset_status == 'assigned'"
+                    decoration-success="elmi_asset_status == 'standby'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_tree_elmi" model="ir.ui.view">
+        <field name="name">fleet.vehicle.list.elmi</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state_id']" position="after">
+                <field name="elmi_asset_status" widget="badge" optional="show"
+                    decoration-danger="elmi_asset_status == 'under_maintenance'"
+                    decoration-warning="elmi_asset_status == 'assigned'"
+                    decoration-success="elmi_asset_status == 'standby'"/>
+                <field name="elmi_fleet_class" optional="hide"/>
+                <field name="elmi_current_meter" optional="hide"/>
+                <field name="elmi_maintenance_cost_total" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

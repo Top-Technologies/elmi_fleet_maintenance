@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rule_elmi_meter_company" model="ir.rule">
+            <field name="name">Meter reading multi-company</field>
+            <field name="model_id" ref="model_elmi_meter_reading"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        <record id="rule_elmi_pm_company" model="ir.rule">
+            <field name="name">PM plan multi-company</field>
+            <field name="model_id" ref="model_elmi_pm_plan_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        <record id="rule_elmi_fault_company" model="ir.rule">
+            <field name="name">Fault category multi-company</field>
+            <field name="model_id" ref="model_elmi_fault_category"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        <record id="rule_elmi_site_company" model="ir.rule">
+            <field name="name">Site multi-company</field>
+            <field name="model_id" ref="model_elmi_site"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        <record id="rule_elmi_part_company" model="ir.rule">
+            <field name="name">Part line multi-company</field>
+            <field name="model_id" ref="model_elmi_maintenance_part_line"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        <record id="rule_elmi_signout_company" model="ir.rule">
+            <field name="name">Tool sign-out multi-company</field>
+            <field name="model_id" ref="model_elmi_tool_signout"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        <record id="rule_elmi_cannibal_company" model="ir.rule">
+            <field name="name">Cannibalization multi-company</field>
+            <field name="model_id" ref="model_elmi_cannibalization"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        <record id="rule_elmi_replacement_company" model="ir.rule">
+            <field name="name">Replacement multi-company</field>
+            <field name="model_id" ref="model_elmi_cannibalization_replacement"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+    </data>
+</odoo>

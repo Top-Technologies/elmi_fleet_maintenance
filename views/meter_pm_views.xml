@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="elmi_meter_reading_view_list" model="ir.ui.view">
+        <field name="name">elmi.meter.reading.list</field>
+        <field name="model">elmi.meter.reading</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="vehicle_id"/>
+                <field name="meter_type"/>
+                <field name="value"/>
+                <field name="previous_value"/>
+                <field name="delta"/>
+                <field name="source"/>
+                <field name="meter_replaced"/>
+            </list>
+        </field>
+    </record>
+    <record id="elmi_meter_reading_view_form" model="ir.ui.view">
+        <field name="name">elmi.meter.reading.form</field>
+        <field name="model">elmi.meter.reading</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="vehicle_id"/>
+                            <field name="meter_type"/>
+                            <field name="date"/>
+                            <field name="source"/>
+                        </group>
+                        <group>
+                            <field name="value"/>
+                            <field name="previous_value"/>
+                            <field name="delta"/>
+                            <field name="meter_replaced"/>
+                            <field name="meter_replaced_reason" invisible="not meter_replaced" required="meter_replaced"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="elmi_meter_reading_view_search" model="ir.ui.view">
+        <field name="name">elmi.meter.reading.search</field>
+        <field name="model">elmi.meter.reading</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="meter_type"/>
+                <filter string="Kilometres" name="km" domain="[('meter_type', '=', 'odometer_km')]"/>
+                <filter string="Engine Hours" name="hours" domain="[('meter_type', '=', 'engine_hours')]"/>
+                <group>
+                    <filter string="Vehicle" name="groupby_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <filter string="Meter" name="groupby_meter" context="{'group_by': 'meter_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="elmi_meter_reading_action" model="ir.actions.act_window">
+        <field name="name">Meter Readings</field>
+        <field name="res_model">elmi.meter.reading</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="elmi_pm_plan_view_list" model="ir.ui.view">
+        <field name="name">elmi.pm.plan.line.list</field>
+        <field name="model">elmi.pm.plan.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="meter_type"/>
+                <field name="interval"/>
+                <field name="warning_lead_pct"/>
+                <field name="last_done_meter"/>
+                <field name="next_due"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="elmi_pm_plan_view_form" model="ir.ui.view">
+        <field name="name">elmi.pm.plan.line.form</field>
+        <field name="model">elmi.pm.plan.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="reference"/>
+                            <field name="name"/>
+                            <field name="vehicle_id"/>
+                            <field name="meter_type"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="interval"/>
+                            <field name="warning_lead_pct"/>
+                            <field name="last_done_meter"/>
+                            <field name="next_due"/>
+                        </group>
+                    </group>
+                    <field name="checklist" placeholder="Checklist"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="elmi_pm_plan_action" model="ir.actions.act_window">
+        <field name="name">Meter PM Plans</field>
+        <field name="res_model">elmi.pm.plan.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

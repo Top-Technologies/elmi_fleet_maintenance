@@ -1,0 +1,41 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Packaging / tools
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+htmlcov/
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Local env and logs
+.env
+.venv/
+venv/
+*.log
+*.pot
+
+# Odoo local / generated
+*.pyc
+sessions/
+filestore/
+
+# Not shipped with this addon
+tests/
+demo/

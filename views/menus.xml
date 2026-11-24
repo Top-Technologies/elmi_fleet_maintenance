@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_elmi_maintenance_root" name="Garage" parent="maintenance.menu_maintenance_title" sequence="15"
+        groups="elmi_fleet_maintenance.group_elmi_mechanic,elmi_fleet_maintenance.group_elmi_storekeeper,elmi_fleet_maintenance.group_elmi_workshop_head,elmi_fleet_maintenance.group_elmi_heavy_fleet_manager,elmi_fleet_maintenance.group_elmi_light_fleet_manager,elmi_fleet_maintenance.group_elmi_auditor,base.group_system"/>
+    <menuitem id="menu_elmi_meter_maintenance" name="Meter Readings" parent="menu_elmi_maintenance_root" action="elmi_meter_reading_action" sequence="10"/>
+    <menuitem id="menu_elmi_pm_maintenance" name="Meter PM Plans" parent="menu_elmi_maintenance_root" action="elmi_pm_plan_action" sequence="20"/>
+    <menuitem id="menu_elmi_tool_signout" name="Tool Sign-out" parent="menu_elmi_maintenance_root" action="elmi_tool_signout_action" sequence="30"/>
+    <menuitem id="menu_elmi_cannibalization" name="Cannibalization" parent="menu_elmi_maintenance_root" action="elmi_cannibalization_action" sequence="40"/>
+    <menuitem id="menu_elmi_parts_in_transit" name="Parts in Transit" parent="menu_elmi_maintenance_root" action="elmi_cannibalization_transit_action" sequence="50"/>
+    <menuitem id="menu_elmi_replacement_aging" name="Open Replacement Aging" parent="maintenance.menu_m_reports" action="elmi_replacement_aging_action" sequence="30"
+        groups="elmi_fleet_maintenance.group_elmi_mechanic,elmi_fleet_maintenance.group_elmi_storekeeper,elmi_fleet_maintenance.group_elmi_workshop_head,elmi_fleet_maintenance.group_elmi_heavy_fleet_manager,elmi_fleet_maintenance.group_elmi_light_fleet_manager,elmi_fleet_maintenance.group_elmi_auditor,base.group_system"/>
+    <menuitem id="menu_elmi_maintenance_cost" name="Maintenance Cost" parent="maintenance.menu_m_reports" action="maintenance_request_cost_action" sequence="40"
+        groups="elmi_fleet_maintenance.group_elmi_mechanic,elmi_fleet_maintenance.group_elmi_storekeeper,elmi_fleet_maintenance.group_elmi_workshop_head,elmi_fleet_maintenance.group_elmi_heavy_fleet_manager,elmi_fleet_maintenance.group_elmi_light_fleet_manager,elmi_fleet_maintenance.group_elmi_auditor,base.group_system"/>
+    <menuitem id="menu_elmi_fault_category" name="Fault Categories" parent="maintenance.menu_maintenance_configuration" action="elmi_fault_category_action" sequence="40" groups="base.group_system,elmi_fleet_maintenance.group_elmi_workshop_head"/>
+    <menuitem id="menu_elmi_site" name="Sites" parent="maintenance.menu_maintenance_configuration" action="elmi_site_action" sequence="50" groups="base.group_system,elmi_fleet_maintenance.group_elmi_workshop_head"/>
+
+    <menuitem id="menu_elmi_fleet_root" name="Garage" parent="fleet.menu_root" sequence="15"
+        groups="elmi_fleet_maintenance.group_elmi_mechanic,elmi_fleet_maintenance.group_elmi_storekeeper,elmi_fleet_maintenance.group_elmi_workshop_head,elmi_fleet_maintenance.group_elmi_heavy_fleet_manager,elmi_fleet_maintenance.group_elmi_light_fleet_manager,elmi_fleet_maintenance.group_elmi_auditor,base.group_system"/>
+    <menuitem id="menu_elmi_meter_fleet" name="Meter Readings" parent="menu_elmi_fleet_root" action="elmi_meter_reading_action" sequence="10"/>
+    <menuitem id="menu_elmi_pm_fleet" name="Meter PM Plans" parent="menu_elmi_fleet_root" action="elmi_pm_plan_action" sequence="20"/>
+    <menuitem id="menu_elmi_cannibalization_fleet" name="Cannibalization" parent="menu_elmi_fleet_root" action="elmi_cannibalization_action" sequence="30"/>
+    <menuitem id="menu_elmi_transit_fleet" name="Parts in Transit" parent="menu_elmi_fleet_root" action="elmi_cannibalization_transit_action" sequence="40"/>
+</odoo>

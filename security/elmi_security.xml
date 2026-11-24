@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.module.category" id="module_category_elmi_fleet_maintenance">
+        <field name="name">Elmi Fleet Maintenance</field>
+        <field name="sequence">45</field>
+    </record>
+
+    <record model="res.groups.privilege" id="privilege_elmi_mechanic">
+        <field name="name">Elmi Mechanic</field>
+        <field name="category_id" ref="module_category_elmi_fleet_maintenance"/>
+    </record>
+    <record model="res.groups.privilege" id="privilege_elmi_storekeeper">
+        <field name="name">Elmi Garage Storekeeper</field>
+        <field name="category_id" ref="module_category_elmi_fleet_maintenance"/>
+    </record>
+    <record model="res.groups.privilege" id="privilege_elmi_workshop_head">
+        <field name="name">Elmi Garage Workshop Head</field>
+        <field name="category_id" ref="module_category_elmi_fleet_maintenance"/>
+    </record>
+    <record model="res.groups.privilege" id="privilege_elmi_heavy_fleet">
+        <field name="name">Elmi Heavy Fleet Manager</field>
+        <field name="category_id" ref="module_category_elmi_fleet_maintenance"/>
+    </record>
+    <record model="res.groups.privilege" id="privilege_elmi_light_fleet">
+        <field name="name">Elmi Light Fleet Manager</field>
+        <field name="category_id" ref="module_category_elmi_fleet_maintenance"/>
+    </record>
+    <record model="res.groups.privilege" id="privilege_elmi_auditor">
+        <field name="name">Elmi Auditor</field>
+        <field name="category_id" ref="module_category_elmi_fleet_maintenance"/>
+    </record>
+    <record model="res.groups.privilege" id="privilege_elmi_tool_override">
+        <field name="name">Elmi Tool Clearance Override</field>
+        <field name="category_id" ref="module_category_elmi_fleet_maintenance"/>
+    </record>
+
+    <record id="group_elmi_mechanic" model="res.groups">
+        <field name="name">Mechanic</field>
+        <field name="privilege_id" ref="privilege_elmi_mechanic"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('fleet.fleet_group_user')), (4, ref('maintenance.group_equipment_manager'))]"/>
+        <field name="comment">Record meter readings, incidents and part requests.</field>
+    </record>
+    <record id="group_elmi_storekeeper" model="res.groups">
+        <field name="name">Garage Storekeeper</field>
+        <field name="privilege_id" ref="privilege_elmi_storekeeper"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('stock.group_stock_user')), (4, ref('fleet.fleet_group_user')), (4, ref('maintenance.group_equipment_manager'))]"/>
+        <field name="comment">Issue and return parts, and run the tool sign-out register.</field>
+    </record>
+    <record id="group_elmi_workshop_head" model="res.groups">
+        <field name="name">Garage Workshop Head</field>
+        <field name="privilege_id" ref="privilege_elmi_workshop_head"/>
+        <field name="implied_ids" eval="[(4, ref('group_elmi_mechanic')), (4, ref('stock.group_stock_user')), (4, ref('purchase.group_purchase_user'))]"/>
+        <field name="comment">Approve parts and cannibalization, and create outsourced RFQs.</field>
+    </record>
+    <record id="group_elmi_heavy_fleet_manager" model="res.groups">
+        <field name="name">Heavy Fleet Manager</field>
+        <field name="privilege_id" ref="privilege_elmi_heavy_fleet"/>
+        <field name="implied_ids" eval="[(4, ref('fleet.fleet_group_manager')), (4, ref('maintenance.group_equipment_manager')), (4, ref('purchase.group_purchase_user'))]"/>
+        <field name="comment">Approve cannibalization of heavy assets.</field>
+    </record>
+    <record id="group_elmi_light_fleet_manager" model="res.groups">
+        <field name="name">Light Fleet Manager</field>
+        <field name="privilege_id" ref="privilege_elmi_light_fleet"/>
+        <field name="implied_ids" eval="[(4, ref('fleet.fleet_group_manager')), (4, ref('maintenance.group_equipment_manager')), (4, ref('purchase.group_purchase_user'))]"/>
+        <field name="comment">Approve cannibalization of light assets.</field>
+    </record>
+    <record id="group_elmi_auditor" model="res.groups">
+        <field name="name">Auditor</field>
+        <field name="privilege_id" ref="privilege_elmi_auditor"/>
+        <field name="implied_ids" eval="[(4, ref('fleet.fleet_group_user'))]"/>
+        <field name="comment">Read-only access to garage maintenance records. Do not combine with an operational role.</field>
+    </record>
+    <record id="group_elmi_tool_clearance_override" model="res.groups">
+        <field name="name">Tool clearance override</field>
+        <field name="privilege_id" ref="privilege_elmi_tool_override"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Allow employee departure while tools are still held. The storekeeper is still notified.</field>
+    </record>
+</odoo>

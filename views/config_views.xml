@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_elmi" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.elmi.fleet.maintenance</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Fleet Maintenance" string="Fleet Maintenance" name="elmi_fleet_maintenance" groups="base.group_system">
+                    <block title="Meters and preventive maintenance" name="elmi_meters">
+                        <setting string="Done meter" help="Choose whether a completed meter plan stores the live meter or the due value.">
+                            <field name="elmi_pm_done_meter_policy"/>
+                        </setting>
+                    </block>
+                    <block title="Workshop cost and outsourcing" name="elmi_cost">
+                        <setting string="Labor rate" help="Default hourly rate on new work orders. Leave at 0 until O-FL-11 is decided.">
+                            <field name="elmi_labor_rate"/>
+                        </setting>
+                        <setting string="Outsourced service" help="Service product added as a line on the RFQ.">
+                            <field name="elmi_service_product_id"/>
+                        </setting>
+                        <setting string="Cost rule" help="Placeholder until O-FL-22 is decided. No journal entry is created.">
+                            <field name="elmi_cost_rule"/>
+                        </setting>
+                        <setting string="Replacement RFQ" help="Create a draft purchase order for the donor part when cannibalization is approved.">
+                            <field name="elmi_auto_replacement_po"/>
+                        </setting>
+                    </block>
+                    <block title="Locations" name="elmi_locations">
+                        <setting string="Garage store">
+                            <field name="elmi_garage_location_id"/>
+                        </setting>
+                        <setting string="Default part source" help="Falls back to the garage store. Part-location rule is O-FL-22.">
+                            <field name="elmi_default_part_location_id"/>
+                        </setting>
+                        <setting string="Consumption location">
+                            <field name="elmi_consumption_location_id"/>
+                        </setting>
+                        <setting string="In-transit location">
+                            <field name="elmi_transit_location_id"/>
+                        </setting>
+                    </block>
+                    <block title="Cannibalization alerts" name="elmi_alerts">
+                        <setting string="Open days" help="0 disables this alert. O-FL-23.">
+                            <field name="elmi_max_open_days"/>
+                        </setting>
+                        <setting string="Transit days" help="0 disables this alert. O-FL-23.">
+                            <field name="elmi_max_transit_days"/>
+                        </setting>
+                        <setting string="Repeat count" help="0 disables this alert. O-FL-23.">
+                            <field name="elmi_repeat_count"/>
+                        </setting>
+                        <setting string="Repeat window" help="0 disables this alert. O-FL-23.">
+                            <field name="elmi_repeat_window_days"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="elmi_fault_category_view_list" model="ir.ui.view">
+        <field name="name">elmi.fault.category.list</field>
+        <field name="model">elmi.fault.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+    <record id="elmi_fault_category_view_form" model="ir.ui.view">
+        <field name="name">elmi.fault.category.form</field>
+        <field name="model">elmi.fault.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="active"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="elmi_fault_category_action" model="ir.actions.act_window">
+        <field name="name">Fault Categories</field>
+        <field name="res_model">elmi.fault.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="elmi_site_view_list" model="ir.ui.view">
+        <field name="name">elmi.site.list</field>
+        <field name="model">elmi.site</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+    <record id="elmi_site_view_form" model="ir.ui.view">
+        <field name="name">elmi.site.form</field>
+        <field name="model">elmi.site</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="active"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="elmi_site_action" model="ir.actions.act_window">
+        <field name="name">Sites</field>
+        <field name="res_model">elmi.site</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

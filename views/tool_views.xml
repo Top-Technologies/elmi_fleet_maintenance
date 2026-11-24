@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="elmi_tool_signout_view_list" model="ir.ui.view">
+        <field name="name">elmi.tool.signout.list</field>
+        <field name="model">elmi.tool.signout</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'overdue'" decoration-success="state == 'returned'">
+                <field name="name"/>
+                <field name="tool_id"/>
+                <field name="employee_id"/>
+                <field name="date_out"/>
+                <field name="expected_return"/>
+                <field name="date_returned"/>
+                <field name="state" widget="badge"/>
+                <field name="storekeeper_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="elmi_tool_signout_view_form" model="ir.ui.view">
+        <field name="name">elmi.tool.signout.form</field>
+        <field name="model">elmi.tool.signout</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_return" type="object" string="Return" invisible="state == 'returned'"
+                        groups="elmi_fleet_maintenance.group_elmi_storekeeper,elmi_fleet_maintenance.group_elmi_workshop_head,base.group_system"/>
+                    <field name="state" widget="statusbar" statusbar_visible="out,returned"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="tool_id"/>
+                            <field name="employee_id"/>
+                            <field name="storekeeper_id"/>
+                        </group>
+                        <group>
+                            <field name="date_out"/>
+                            <field name="expected_return"/>
+                            <field name="date_returned"/>
+                            <field name="condition_out"/>
+                            <field name="condition_in"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="elmi_tool_signout_view_search" model="ir.ui.view">
+        <field name="name">elmi.tool.signout.search</field>
+        <field name="model">elmi.tool.signout</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="tool_id"/>
+                <field name="employee_id"/>
+                <filter string="Out" name="out" domain="[('state', '=', 'out')]"/>
+                <filter string="Overdue" name="overdue" domain="[('state', '=', 'overdue')]"/>
+                <filter string="Returned" name="returned" domain="[('state', '=', 'returned')]"/>
+                <group>
+                    <filter string="Tool" name="groupby_tool" context="{'group_by': 'tool_id'}"/>
+                    <filter string="Employee" name="groupby_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Status" name="groupby_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="elmi_tool_signout_action" model="ir.actions.act_window">
+        <field name="name">Tool Sign-out</field>
+        <field name="res_model">elmi.tool.signout</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

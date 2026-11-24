@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="elmi_cannibalization_view_list" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.list</field>
+        <field name="model">elmi.cannibalization</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="alert_reason" decoration-warning="state == 'in_transit'">
+                <field name="name"/>
+                <field name="donor_vehicle_id"/>
+                <field name="recipient_vehicle_id"/>
+                <field name="product_id"/>
+                <field name="lot_id"/>
+                <field name="qty"/>
+                <field name="state" widget="badge"/>
+                <field name="alert_reason"/>
+                <field name="aging_bucket"/>
+                <field name="open_days"/>
+                <field name="transferred_cost"/>
+            </list>
+        </field>
+    </record>
+    <record id="elmi_cannibalization_view_form" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.form</field>
+        <field name="model">elmi.cannibalization</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Submit" invisible="state != 'draft'"/>
+                    <button name="action_approve_workshop" type="object" string="Workshop Approve"
+                        invisible="state != 'submitted' or workshop_approved"
+                        groups="elmi_fleet_maintenance.group_elmi_workshop_head,base.group_system"/>
+                    <button name="action_approve_fleet" type="object" string="Fleet Approve"
+                        invisible="state != 'submitted' or fleet_approved"
+                        groups="elmi_fleet_maintenance.group_elmi_heavy_fleet_manager,elmi_fleet_maintenance.group_elmi_light_fleet_manager,base.group_system"/>
+                    <button name="action_start_transit" type="object" string="Start Transit" invisible="state != 'approved'"/>
+                    <button name="action_install" type="object" string="Install" invisible="state != 'in_transit'"/>
+                    <button name="action_close" type="object" string="Close" invisible="state != 'installed'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state not in ('draft', 'submitted', 'approved')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,in_transit,installed,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pickings" type="object" class="oe_stat_button" icon="fa-truck" invisible="not picking_out_id and not picking_in_id">
+                            <div class="o_stat_info"><span class="o_stat_text">Transfers</span></div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Alert" bg_color="text-bg-danger" invisible="not alert_reason"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="donor_vehicle_id" readonly="state != 'draft'"/>
+                            <field name="recipient_vehicle_id" readonly="state != 'draft'"/>
+                            <field name="product_id" readonly="state != 'draft'"/>
+                            <field name="lot_id" readonly="state != 'draft'"/>
+                            <field name="qty" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="requested_by"/>
+                            <field name="donor_request_id"/>
+                            <field name="recipient_request_id"/>
+                            <field name="workshop_approved"/>
+                            <field name="fleet_approved"/>
+                            <field name="transit_start"/>
+                            <field name="alert_reason"/>
+                            <field name="alert_reason_detail"/>
+                            <field name="aging_bucket"/>
+                            <field name="open_days"/>
+                        </group>
+                    </group>
+                    <group string="Cost transfer">
+                        <field name="currency_id" invisible="1"/>
+                        <field name="cost_rule"/>
+                        <field name="part_cost"/>
+                        <field name="transferred_cost"/>
+                        <field name="cost_posted"/>
+                    </group>
+                    <field name="reason" placeholder="Reason"/>
+                    <field name="photo_ids" widget="many2many_binary"/>
+                    <field name="replacement_ids">
+                        <list>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="status"/>
+                            <field name="age_days"/>
+                            <field name="purchase_order_id"/>
+                            <field name="receipt_picking_id"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="elmi_cannibalization_view_kanban" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.kanban</field>
+        <field name="model">elmi.cannibalization</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold"/>
+                        <field name="donor_vehicle_id"/>
+                        <field name="recipient_vehicle_id"/>
+                        <field name="product_id"/>
+                        <field name="alert_reason" widget="badge" decoration-danger="alert_reason"/>
+                        <field name="aging_bucket"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="elmi_cannibalization_view_pivot" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.pivot</field>
+        <field name="model">elmi.cannibalization</field>
+        <field name="arch" type="xml">
+            <pivot string="Cannibalization">
+                <field name="donor_vehicle_id" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="aging_bucket" type="col"/>
+                <field name="qty" type="measure"/>
+                <field name="transferred_cost" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="elmi_cannibalization_view_graph" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.graph</field>
+        <field name="model">elmi.cannibalization</field>
+        <field name="arch" type="xml">
+            <graph string="Cannibalization" type="bar">
+                <field name="product_id"/>
+                <field name="qty" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="elmi_cannibalization_view_search" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.search</field>
+        <field name="model">elmi.cannibalization</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="donor_vehicle_id"/>
+                <field name="recipient_vehicle_id"/>
+                <field name="product_id"/>
+                <field name="lot_id"/>
+                <filter string="Parts in Transit" name="in_transit" domain="[('state', '=', 'in_transit')]"/>
+                <filter string="Open" name="open" domain="[('state', 'in', ('draft', 'submitted', 'approved'))]"/>
+                <filter string="With Alert" name="alert" domain="[('alert_reason', '!=', False)]"/>
+                <separator/>
+                <filter string="0-7 days" name="bucket_0_7" domain="[('aging_bucket', '=', '0_7')]"/>
+                <filter string="8-30 days" name="bucket_8_30" domain="[('aging_bucket', '=', '8_30')]"/>
+                <filter string="31-90 days" name="bucket_31_90" domain="[('aging_bucket', '=', '31_90')]"/>
+                <filter string="90+ days" name="bucket_90" domain="[('aging_bucket', '=', '90_plus')]"/>
+                <group>
+                    <filter string="Donor" name="groupby_donor" context="{'group_by': 'donor_vehicle_id'}"/>
+                    <filter string="Recipient" name="groupby_recipient" context="{'group_by': 'recipient_vehicle_id'}"/>
+                    <filter string="Part" name="groupby_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Status" name="groupby_state" context="{'group_by': 'state'}"/>
+                    <filter string="Alert" name="groupby_alert" context="{'group_by': 'alert_reason'}"/>
+                    <filter string="Aging" name="groupby_aging" context="{'group_by': 'aging_bucket'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="elmi_cannibalization_action" model="ir.actions.act_window">
+        <field name="name">Cannibalization</field>
+        <field name="res_model">elmi.cannibalization</field>
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+    </record>
+    <record id="elmi_cannibalization_transit_action" model="ir.actions.act_window">
+        <field name="name">Parts in Transit</field>
+        <field name="res_model">elmi.cannibalization</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state', '=', 'in_transit')]</field>
+        <field name="context">{'search_default_in_transit': 1}</field>
+    </record>
+
+    <record id="elmi_replacement_view_list" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.replacement.list</field>
+        <field name="model">elmi.cannibalization.replacement</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="donor_vehicle_id"/>
+                <field name="product_id"/>
+                <field name="qty"/>
+                <field name="status" widget="badge"/>
+                <field name="age_days"/>
+                <field name="purchase_order_id"/>
+                <field name="receipt_picking_id"/>
+                <field name="close_date"/>
+            </list>
+        </field>
+    </record>
+    <record id="elmi_replacement_view_form" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.replacement.form</field>
+        <field name="model">elmi.cannibalization.replacement</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mark_received" type="object" string="Mark Received" invisible="status in ('received', 'closed')"/>
+                    <button name="action_close" type="object" string="Close" invisible="status == 'closed'"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="cannibalization_id"/>
+                        <field name="donor_vehicle_id"/>
+                        <field name="product_id"/>
+                        <field name="qty"/>
+                        <field name="age_days"/>
+                        <field name="purchase_order_id"/>
+                        <field name="receipt_picking_id"/>
+                        <field name="close_date"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="elmi_replacement_view_search" model="ir.ui.view">
+        <field name="name">elmi.cannibalization.replacement.search</field>
+        <field name="model">elmi.cannibalization.replacement</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="donor_vehicle_id"/>
+                <field name="product_id"/>
+                <filter string="Open" name="open" domain="[('status', '!=', 'closed')]"/>
+                <group>
+                    <filter string="Donor" name="groupby_donor" context="{'group_by': 'donor_vehicle_id'}"/>
+                    <filter string="Part" name="groupby_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Status" name="groupby_status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="elmi_replacement_aging_action" model="ir.actions.act_window">
+        <field name="name">Open Replacement Aging</field>
+        <field name="res_model">elmi.cannibalization.replacement</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('status', '!=', 'closed')]</field>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+</odoo>

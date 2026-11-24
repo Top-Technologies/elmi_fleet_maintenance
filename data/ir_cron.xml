@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_elmi_pm_plans" model="ir.cron">
+            <field name="name">Elmi: check meter preventive plans</field>
+            <field name="model_id" ref="model_elmi_pm_plan_line"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_meter_plans()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="ir_cron_elmi_tool_overdue" model="ir.cron">
+            <field name="name">Elmi: mark overdue tool sign-outs</field>
+            <field name="model_id" ref="model_elmi_tool_signout"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_mark_overdue()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="ir_cron_elmi_cannibalization_alerts" model="ir.cron">
+            <field name="name">Elmi: cannibalization alerts</field>
+            <field name="model_id" ref="model_elmi_cannibalization"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_refresh_alerts()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+    </data>
+</odoo>

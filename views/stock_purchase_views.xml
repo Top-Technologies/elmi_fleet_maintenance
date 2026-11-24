@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_elmi" model="ir.ui.view">
+        <field name="name">stock.picking.form.elmi</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra']//group[@name='other_infos']" position="inside">
+                <field name="elmi_maintenance_request_id"/>
+                <field name="elmi_cannibalization_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_production_lot_form_elmi" model="ir.ui.view">
+        <field name="name">stock.lot.form.elmi</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="after">
+                <div class="oe_button_box" name="elmi_button_box">
+                    <button name="action_elmi_open_cannibalization" type="object" class="oe_stat_button" icon="fa-exchange">
+                        <field name="elmi_cannibalization_count" widget="statinfo" string="Cannibalization"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='inventory_group']" position="inside">
+                <field name="elmi_installed_vehicle_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_elmi" model="ir.ui.view">
+        <field name="name">purchase.order.form.elmi</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_elmi_open_maintenance_request" type="object" class="oe_stat_button" icon="fa-wrench"
+                    invisible="not elmi_maintenance_request_id">
+                    <div class="o_stat_info"><span class="o_stat_text">Work Order</span></div>
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='other_info']" position="inside">
+                <field name="elmi_maintenance_request_id"/>
+                <field name="elmi_vehicle_id"/>
+                <field name="elmi_cannibalization_id"/>
+                <field name="elmi_replacement_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_equipment_view_form_elmi" model="ir.ui.view">
+        <field name="name">maintenance.equipment.form.elmi</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="elmi_vehicle_id"/>
+                <field name="elmi_is_tool"/>
+                <field name="elmi_current_holder_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_equipment_request_view_form_elmi" model="ir.ui.view">
+        <field name="name">maintenance.request.form.elmi</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_elmi_create_rfq" type="object" string="Create RFQ"
+                    invisible="elmi_execution_type != 'outsourced' or elmi_purchase_order_id"
+                    groups="elmi_fleet_maintenance.group_elmi_workshop_head,base.group_system"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="oe_button_box" name="elmi_button_box">
+                    <button name="action_elmi_view_purchase_order" type="object" class="oe_stat_button" icon="fa-shopping-cart"
+                        invisible="not elmi_purchase_order_id">
+                        <field name="elmi_purchase_count" widget="statinfo" string="RFQ"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='maintenance_type']" position="after">
+                <field name="elmi_vehicle_id"/>
+                <field name="elmi_execution_type"/>
+                <field name="elmi_vendor_id" invisible="elmi_execution_type != 'outsourced'" required="elmi_execution_type == 'outsourced'"/>
+                <field name="elmi_purchase_order_id" readonly="1"/>
+                <field name="elmi_pm_plan_line_id" readonly="1" invisible="not elmi_pm_plan_line_id"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Incident" name="elmi_incident" invisible="maintenance_type != 'corrective'">
+                    <group>
+                        <group>
+                            <field name="elmi_fault_category_id"/>
+                            <field name="elmi_incident_datetime"/>
+                            <field name="elmi_site_id"/>
+                            <field name="elmi_reported_by_id"/>
+                        </group>
+                        <group>
+                            <field name="elmi_downtime_start"/>
+                            <field name="elmi_downtime_end"/>
+                            <field name="elmi_downtime_hours"/>
+                        </group>
+                    </group>
+                    <field name="elmi_photo_ids" widget="many2many_binary"/>
+                </page>
+                <page string="Parts" name="elmi_parts">
+                    <field name="elmi_part_line_ids">
+                        <list editable="bottom">
+                            <field name="product_id"/>
+                            <field name="qty"/>
+                            <field name="uom_id"/>
+                            <field name="lot_id"/>
+                            <field name="source_location_id"/>
+                            <field name="submitted" column_invisible="1"/>
+                            <field name="state" widget="badge"/>
+                            <field name="cost"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <button name="action_submit" type="object" string="Submit" invisible="state != 'draft' or submitted"/>
+                            <button name="action_approve" type="object" string="Approve" invisible="state != 'draft' or not submitted"
+                                groups="elmi_fleet_maintenance.group_elmi_workshop_head,base.group_system"/>
+                            <button name="action_issue" type="object" string="Issue" invisible="state != 'approved'"
+                                groups="elmi_fleet_maintenance.group_elmi_storekeeper,elmi_fleet_maintenance.group_elmi_workshop_head,base.group_system"/>
+                            <button name="action_return" type="object" string="Return" invisible="state != 'issued'"
+                                groups="elmi_fleet_maintenance.group_elmi_storekeeper,elmi_fleet_maintenance.group_elmi_workshop_head,base.group_system"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Cost" name="elmi_cost">
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="elmi_parts_cost"/>
+                            <field name="elmi_labor_hours"/>
+                            <field name="elmi_labor_rate"/>
+                            <field name="elmi_labor_cost"/>
+                        </group>
+                        <group>
+                            <field name="elmi_outsourced_cost"/>
+                            <field name="elmi_other_cost"/>
+                            <field name="elmi_total_cost"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_equipment_request_view_search_elmi" model="ir.ui.view">
+        <field name="name">maintenance.request.search.elmi</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='equipment_id']" position="after">
+                <field name="elmi_vehicle_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='high_priority']" position="after">
+                <filter string="In House" name="elmi_in_house" domain="[('elmi_execution_type', '=', 'in_house')]"/>
+                <filter string="Outsourced" name="elmi_outsourced" domain="[('elmi_execution_type', '=', 'outsourced')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Asset" name="groupby_elmi_vehicle" context="{'group_by': 'elmi_vehicle_id'}"/>
+                <filter string="Team" name="groupby_elmi_team" context="{'group_by': 'maintenance_team_id'}"/>
+                <filter string="Month" name="groupby_elmi_month" context="{'group_by': 'request_date:month'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_request_view_pivot_elmi" model="ir.ui.view">
+        <field name="name">maintenance.request.pivot.elmi</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+            <pivot string="Maintenance Cost">
+                <field name="elmi_vehicle_id" type="row"/>
+                <field name="maintenance_team_id" type="row"/>
+                <field name="request_date" interval="month" type="col"/>
+                <field name="elmi_total_cost" type="measure"/>
+                <field name="elmi_parts_cost" type="measure"/>
+                <field name="elmi_labor_cost" type="measure"/>
+                <field name="elmi_outsourced_cost" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="maintenance_request_view_graph_elmi" model="ir.ui.view">
+        <field name="name">maintenance.request.graph.elmi</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+            <graph string="Maintenance Cost" type="bar">
+                <field name="elmi_vehicle_id"/>
+                <field name="maintenance_team_id"/>
+                <field name="elmi_total_cost" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="maintenance_request_cost_action" model="ir.actions.act_window">
+        <field name="name">Maintenance Cost</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="view_mode">pivot,graph,list,form</field>
+    </record>
+</odoo>
